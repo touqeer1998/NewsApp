@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import com.loc.newsapp.presentation.onboarding.OnBoardingScreen
 import com.loc.newsapp.ui.theme.NewsAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         //showing splash screen
         installSplashScreen()
         super.onCreate(savedInstanceState)

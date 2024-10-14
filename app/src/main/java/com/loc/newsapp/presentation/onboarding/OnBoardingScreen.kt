@@ -1,17 +1,32 @@
 package com.loc.newsapp.presentation.onboarding
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.loc.newsapp.presentation.common.NewsButton
+import com.loc.newsapp.presentation.common.NewsTextButton
 import com.loc.newsapp.presentation.onboarding.components.OnBoardingPage
+import com.loc.newsapp.presentation.onboarding.components.PageIndicator
+import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.LargePadding
+import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.PageIndicatorSize
 import com.loc.newsapp.presentation.onboarding.models.pages
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -22,10 +37,13 @@ fun OnBoardingScreen() {
         }
 
         val buttonState = remember {
-            when (pagerState.currentPage) {
-                0 -> listOf("", "Next")
-                1 -> listOf("Back", "Next")
-                else -> listOf("Back", "Finish")
+            derivedStateOf {
+                when (pagerState.currentPage) {
+                    0 -> listOf("", "Next")
+                    1 -> listOf("Back", "Next")
+                    2 -> listOf("Back", "Finish")
+                    else -> listOf("", "")
+                }
             }
         }
 
@@ -34,11 +52,47 @@ fun OnBoardingScreen() {
                 modifier = Modifier.weight(1f), page = pages[index]
             )
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(LargePadding)
+                .navigationBarsPadding(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PageIndicator(
+                modifier = Modifier.width(PageIndicatorSize),
+                pageSize = pages.size,
+                selectedPage = pagerState.currentPage
+            )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val scope = rememberCoroutineScope()
+                if (buttonState.value[0].isNotEmpty()) {
+                    NewsTextButton(text = buttonState.value[0], onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(page = pagerState.currentPage - 1)
+                        }
+                    })
+                }
+                NewsButton(text = buttonState.value[1], onClick = {
+                    scope.launch {
+                        if (pagerState.currentPage == 3) {
+//                            TODO("Need to navigate to home screen")
+                        } else {
+                            pagerState.animateScrollToPage(page = pagerState.currentPage + 1)
+                        }
+                    }
+                })
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun OnBoardingScreenPreview() {
     OnBoardingScreen()
