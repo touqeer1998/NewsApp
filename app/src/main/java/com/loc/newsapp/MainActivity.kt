@@ -12,7 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
-import com.loc.newsapp.domain.usecases.AppEntryUserCases
+import com.loc.newsapp.domain.usecases.AppEntryUseCase
 import com.loc.newsapp.presentation.onboarding.OnBoardingScreen
 import com.loc.newsapp.presentation.onboarding.OnBoardingViewModel
 import com.loc.newsapp.ui.theme.NewsAppTheme
@@ -23,7 +23,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var appEntryUserCases: AppEntryUserCases
+    lateinit var appEntryUseCase: AppEntryUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
-            appEntryUserCases.readAppEntry.invoke().collect {
+            appEntryUseCase.readAppEntry.invoke().collect {
                 Log.d("MainActivity", "onCreate: $it")
             }
         }
