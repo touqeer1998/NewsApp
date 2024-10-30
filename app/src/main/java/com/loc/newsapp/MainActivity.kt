@@ -1,6 +1,7 @@
 package com.loc.newsapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -9,15 +10,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
+import com.loc.newsapp.domain.usecases.AppEntryUserCases
 import com.loc.newsapp.presentation.onboarding.OnBoardingScreen
 import com.loc.newsapp.ui.theme.NewsAppTheme
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var appEntryUserCases: AppEntryUserCases
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         //showing splash screen
         installSplashScreen()
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            appEntryUserCases.readAppEntry.invoke().collect {
+                Log.d("MainActivity", "onCreate: $it")
+            }
+        }
         setContent {
             NewsAppTheme {
                 Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
