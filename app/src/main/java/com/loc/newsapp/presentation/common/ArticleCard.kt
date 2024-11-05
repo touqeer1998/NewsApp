@@ -30,14 +30,14 @@ import com.loc.newsapp.R
 import com.loc.newsapp.domain.model.Article
 import com.loc.newsapp.domain.model.Source
 import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.ArticleCardSize
-import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.ExtraSmallPadding
 import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.ExtraSmallPadding2
 import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.SmallIconSize
+import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.SmallPadding
 import com.loc.newsapp.ui.theme.NewsAppTheme
 
 @Composable
 fun ArticleCard(
-    modifier: Modifier, article: Article, onArticleClick: () -> Unit
+    modifier: Modifier = Modifier, article: Article, onArticleClick: () -> Unit
 ) {
     val context = LocalContext.current
     Row(modifier = modifier.clickable { onArticleClick() }) {
@@ -53,7 +53,7 @@ fun ArticleCard(
         Column(
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
-                .padding(horizontal = ExtraSmallPadding)
+                .padding(horizontal = SmallPadding)
                 .height(ArticleCardSize),
         ) {
             Text(
