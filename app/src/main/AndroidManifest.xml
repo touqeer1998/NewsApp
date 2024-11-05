@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".Application"
@@ -27,4 +27,17 @@
         </activity>
     </application>
 
+    <queries>
+        <!--        for browser intent-->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+
+        <!--        for share intent-->
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+        </intent>
+    </queries>
 </manifest>
