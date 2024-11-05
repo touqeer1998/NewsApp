@@ -17,14 +17,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.loc.newsapp.R
+import com.loc.newsapp.domain.model.Article
 import com.loc.newsapp.presentation.common.ArticlesList
-import com.loc.newsapp.presentation.navigation.Route
 import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.MediumPadding
 import com.loc.newsapp.ui.theme.NewsAppTheme
 
 @Composable
 fun BookMarkScreen(
-    state: BookMarkState, navigate: (String) -> Unit
+    state: BookMarkState, navigateToDetails: (Article) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -40,8 +40,8 @@ fun BookMarkScreen(
 
         Spacer(modifier = Modifier.height(MediumPadding))
 
-        ArticlesList(modifier = Modifier, articles = state.bookmarks, onArticleClick = {
-            navigate(Route.DetailsScreen.route)
+        ArticlesList(modifier = Modifier, articles = state.bookmarks, onArticleClick = { article ->
+            navigateToDetails(article)
         })
     }
 }
@@ -52,7 +52,7 @@ fun BookMarkScreen(
 private fun BookMarkScreenPreview() {
     NewsAppTheme {
         Box(modifier = Modifier.background(color = MaterialTheme.colorScheme.background)) {
-            BookMarkScreen(state = BookMarkState(), navigate = {})
+            BookMarkScreen(state = BookMarkState(), navigateToDetails = {})
         }
     }
 }

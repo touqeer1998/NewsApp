@@ -50,49 +50,54 @@ fun DetailsScreen(
                     context.startActivity(it)
                 }
             }
-        }, onShareClick = {
-            Intent(Intent.ACTION_SEND).also {
-                it.putExtra(Intent.EXTRA_TEXT, article.url)
-                it.type = "text/plain"
-                if (it.resolveActivity(context.packageManager) != null) {
-                    context.startActivity(it)
+        },
+            onShareClick = {
+                Intent(Intent.ACTION_SEND).also {
+                    it.putExtra(Intent.EXTRA_TEXT, article.url)
+                    it.type = "text/plain"
+                    if (it.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(it)
+                    }
                 }
-            }
-        }, onBookmarkClick = { event(DetailsEvent.SaveArticle) }, onBackClick = navigateUp)
-    }
-
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(
-            start = MediumPadding, end = MediumPadding, top = MediumPadding
+            },
+            onBookmarkClick = { event(DetailsEvent.UpsertDeleteArticle(article)) },
+            onBackClick = navigateUp
         )
-    ) {
-        item {
-            AsyncImage(
-                model = ImageRequest.Builder(context = context).data(article.urlToImage).build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(ArticleImageHeight)
-                    .clip(MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop
-            )
 
-            Spacer(modifier = Modifier.height(MediumPadding))
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(
+                start = MediumPadding, end = MediumPadding, top = MediumPadding
+            )
+        ) {
+            item {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = context).data(article.urlToImage)
+                        .build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(ArticleImageHeight)
+                        .clip(MaterialTheme.shapes.medium),
+                    contentScale = ContentScale.Crop
+                )
 
-            Text(
-                text = article.title,
-                style = MaterialTheme.typography.titleSmall,
-                color = colorResource(
-                    id = R.color.text_title
+                Spacer(modifier = Modifier.height(MediumPadding))
+
+                Text(
+                    text = article.title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = colorResource(
+                        id = R.color.text_title
+                    )
                 )
-            )
-            Text(
-                text = article.content,
-                style = MaterialTheme.typography.bodyMedium,
-                color = colorResource(
-                    id = R.color.body
+                Text(
+                    text = article.content,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colorResource(
+                        id = R.color.body
+                    )
                 )
-            )
+            }
         }
     }
 }
