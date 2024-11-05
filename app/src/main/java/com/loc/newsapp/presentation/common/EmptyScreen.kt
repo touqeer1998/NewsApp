@@ -44,7 +44,7 @@ fun EmptyScreen(error: LoadState.Error? = null) {
     }
 
     if (error == null) {
-        message = "You have not saved news so far !"
+        message = "Oops! There is no any bookmarked news"
         icon = R.drawable.ic_search_document
     }
 
@@ -54,7 +54,7 @@ fun EmptyScreen(error: LoadState.Error? = null) {
 
     val alphaAnimation by animateFloatAsState(
         targetValue = if (startAnimation) 0.3f else 0f,
-        animationSpec = tween(durationMillis = 1000),
+        animationSpec = tween(durationMillis = 1500),
         label = ""
     )
 

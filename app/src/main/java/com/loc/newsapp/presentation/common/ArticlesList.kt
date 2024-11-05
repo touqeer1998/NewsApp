@@ -18,6 +18,10 @@ import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.MediumPad
 fun ArticlesList(
     modifier: Modifier, articles: List<Article>, onArticleClick: (Article) -> Unit
 ) {
+    if (articles.isEmpty()) {
+        EmptyScreen()
+        return
+    }
     LazyColumn(
         modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
             MediumPadding
@@ -37,7 +41,7 @@ fun ArticlesList(
 fun ArticlesList(
     modifier: Modifier, articles: LazyPagingItems<Article>, onArticleClick: (Article) -> Unit
 ) {
-    val handlePagingResult = HandlePagingResults(articles = articles)
+    val handlePagingResult = handlePagingResults(articles = articles)
     if (handlePagingResult) {
         LazyColumn(
             modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
@@ -56,7 +60,7 @@ fun ArticlesList(
 }
 
 @Composable
-fun HandlePagingResults(
+private fun handlePagingResults(
     articles: LazyPagingItems<Article>
 ): Boolean {
     val loadState = articles.loadState
