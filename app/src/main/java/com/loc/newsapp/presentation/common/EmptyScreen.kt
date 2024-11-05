@@ -1,6 +1,7 @@
 package com.loc.newsapp.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Resources.NotFoundException
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -101,6 +102,10 @@ fun parseErrorMessage(error: LoadState.Error?): String {
 
         is ConnectException -> {
             "Internet Unavailable."
+        }
+
+        is NotFoundException -> {
+            "No results found."
         }
 
         else -> {

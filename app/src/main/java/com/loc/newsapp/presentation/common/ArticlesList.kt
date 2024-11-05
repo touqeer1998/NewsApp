@@ -1,5 +1,6 @@
 package com.loc.newsapp.presentation.common
 
+import android.content.res.Resources.NotFoundException
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -78,7 +79,12 @@ private fun handlePagingResults(
         }
 
         error != null -> {
-            EmptyScreen()
+            EmptyScreen(error = error)
+            false
+        }
+
+        articles.itemCount == 0 -> {
+            EmptyScreen(error = LoadState.Error(NotFoundException()))
             false
         }
 
