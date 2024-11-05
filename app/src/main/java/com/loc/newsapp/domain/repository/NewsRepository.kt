@@ -8,4 +8,12 @@ interface NewsRepository {
     fun getAllNews(source: List<String>): Flow<PagingData<Article>>
 
     fun searchNews(query: String, sources: List<String>): Flow<PagingData<Article>>
+
+    suspend fun upsert(article: Article)
+
+    suspend fun delete(article: Article)
+
+    suspend fun findArticleByUrl(url: String): Article?
+
+    fun getAllArticles(): Flow<List<Article>>
 }

@@ -1,5 +1,6 @@
 package com.loc.newsapp.presentation.newsNavigator
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -23,6 +25,7 @@ import com.loc.newsapp.R
 import com.loc.newsapp.domain.model.Article
 import com.loc.newsapp.presentation.bookmark.BookMarkScreen
 import com.loc.newsapp.presentation.bookmark.BookMarkViewModel
+import com.loc.newsapp.presentation.details.DetailsEvent
 import com.loc.newsapp.presentation.details.DetailsScreen
 import com.loc.newsapp.presentation.details.DetailsViewModel
 import com.loc.newsapp.presentation.home.HomeScreen
@@ -49,33 +52,38 @@ fun NewsNavigator() {
     var selectedItem by rememberSaveable {
         mutableIntStateOf(0)
     }
-    selectedItem = when (backStackState?.destination?.route) {
-        Route.HomeScreen.route -> 0
-        Route.SearchScreen.route -> 1
-        Route.BookmarkScreen.route -> 2
-        else -> 0
+    selectedItem = remember(key1 = backStackState) {
+        when (backStackState?.destination?.route) {
+            Route.HomeScreen.route -> 0
+            Route.SearchScreen.route -> 1
+            Route.BookmarkScreen.route -> 2
+            else -> 0
+        }
+    }
+    val isBottomNavigationVisible = remember(key1 = backStackState) {
+        backStackState?.destination?.route == Route.HomeScreen.route || backStackState?.destination?.route == Route.SearchScreen.route || backStackState?.destination?.route == Route.BookmarkScreen.route
     }
 
-
     Scaffold(modifier = Modifier.fillMaxWidth(), bottomBar = {
-        NewsBottomNavigation(
-            items = bottomNavigationItems,
-            selectedItem = selectedItem,
-            onClick = { index ->
-                when (index) {
-                    0 -> navigateToTab(
-                        navController = navController, route = Route.HomeScreen.route
-                    )
+        if (isBottomNavigationVisible) {
+            NewsBottomNavigation(items = bottomNavigationItems,
+                selectedItem = selectedItem,
+                onClick = { index ->
+                    when (index) {
+                        0 -> navigateToTab(
+                            navController = navController, route = Route.HomeScreen.route
+                        )
 
-                    1 -> navigateToTab(
-                        navController = navController, route = Route.SearchScreen.route
-                    )
+                        1 -> navigateToTab(
+                            navController = navController, route = Route.SearchScreen.route
+                        )
 
-                    2 -> navigateToTab(
-                        navController = navController, route = Route.BookmarkScreen.route
-                    )
-                }
-            })
+                        2 -> navigateToTab(
+                            navController = navController, route = Route.BookmarkScreen.route
+                        )
+                    }
+                })
+        }
     }) {
         val bottomPadding = it.calculateBottomPadding()
         NavHost(
@@ -101,8 +109,7 @@ fun NewsNavigator() {
                 val viewModel: SearchViewModel = hiltViewModel()
                 val state = viewModel.state.value
                 OnBackClickStateSaver(navController = navController)
-                SearchScreen(
-                    state = state,
+                SearchScreen(state = state,
                     event = viewModel::onEvent,
                     navigateToDetails = { article ->
                         navigateToDetails(
@@ -115,6 +122,12 @@ fun NewsNavigator() {
                 navController.previousBackStackEntry?.savedStateHandle?.get<Article>("article")
                     ?.let { article ->
                         val viewModel: DetailsViewModel = hiltViewModel()
+                        if (viewModel.sideEffect != null) {
+                            Toast.makeText(
+                                LocalContext.current, viewModel.sideEffect, Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.onEvent(DetailsEvent.RemoveSideEffect)
+                        }
                         DetailsScreen(article = article,
                             event = viewModel::onEvent,
                             navigateUp = { navController.navigateUp() })
