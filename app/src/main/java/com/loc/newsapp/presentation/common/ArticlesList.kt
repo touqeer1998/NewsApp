@@ -16,12 +16,31 @@ import com.loc.newsapp.presentation.onboarding.components.utils.Dimens.MediumPad
 
 @Composable
 fun ArticlesList(
+    modifier: Modifier, articles: List<Article>, onArticleClick: (Article) -> Unit
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
+            MediumPadding
+        ), contentPadding = PaddingValues(all = ExtraSmallPadding2)
+    ) {
+        items(articles.size) {
+            articles[it].let { article ->
+                ArticleCard(article = article, onArticleClick = {
+                    onArticleClick(article)
+                })
+            }
+        }
+    }
+}
+
+@Composable
+fun ArticlesList(
     modifier: Modifier, articles: LazyPagingItems<Article>, onArticleClick: (Article) -> Unit
 ) {
     val handlePagingResult = HandlePagingResults(articles = articles)
     if (handlePagingResult) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
+            modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
                 MediumPadding
             ), contentPadding = PaddingValues(all = ExtraSmallPadding2)
         ) {

@@ -13,9 +13,12 @@ import com.loc.newsapp.domain.repository.NewsRepository
 import com.loc.newsapp.domain.usecases.app_entry.AppEntryUseCase
 import com.loc.newsapp.domain.usecases.app_entry.ReadAppEntry
 import com.loc.newsapp.domain.usecases.app_entry.SaveAppEntry
+import com.loc.newsapp.domain.usecases.news.DeleteArticleUseCase
+import com.loc.newsapp.domain.usecases.news.GetArticlesUseCase
 import com.loc.newsapp.domain.usecases.news.GetNewUserCase
 import com.loc.newsapp.domain.usecases.news.NewsUseCases
 import com.loc.newsapp.domain.usecases.news.SearchNewsUseCase
+import com.loc.newsapp.domain.usecases.news.UpsertArticleUseCase
 import com.loc.newsapp.utils.Constants.BASE_URL
 import com.loc.newsapp.utils.Constants.NEWS_DATABASE_NAME
 import dagger.Module
@@ -51,10 +54,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsUserCases(newsRepository: NewsRepository): NewsUseCases = NewsUseCases(
-        getNewsUseCase = GetNewUserCase(newsRepository),
-        searchNewsUseCase = SearchNewsUseCase(newsRepository)
-    )
+    fun provideNewsUserCases(newsRepository: NewsRepository, newsDao: NewsDao): NewsUseCases =
+        NewsUseCases(
+            getNewsUseCase = GetNewUserCase(newsRepository),
+            searchNewsUseCase = SearchNewsUseCase(newsRepository),
+            upsertArticleUseCase = UpsertArticleUseCase(newsDao),
+            deleteArticleUseCase = DeleteArticleUseCase(newsDao),
+            getArticlesUseCase = GetArticlesUseCase(newsDao)
+        )
 
     @Provides
     @Singleton
