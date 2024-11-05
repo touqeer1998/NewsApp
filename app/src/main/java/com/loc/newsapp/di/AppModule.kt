@@ -11,6 +11,7 @@ import com.loc.newsapp.domain.usecases.app_entry.ReadAppEntry
 import com.loc.newsapp.domain.usecases.app_entry.SaveAppEntry
 import com.loc.newsapp.domain.usecases.news.GetNewUserCase
 import com.loc.newsapp.domain.usecases.news.NewsUseCases
+import com.loc.newsapp.domain.usecases.news.SearchNewsUseCase
 import com.loc.newsapp.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -46,6 +47,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNewsUserCases(newsRepository: NewsRepository): NewsUseCases = NewsUseCases(
-        getNewsUseCase = GetNewUserCase(newsRepository)
+        getNewsUseCase = GetNewUserCase(newsRepository),
+        searchNewsUseCase = SearchNewsUseCase(newsRepository)
     )
 }
